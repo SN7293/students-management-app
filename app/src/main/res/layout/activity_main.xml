@@ -9,6 +9,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
+android:background="@drawable/background_gradient"
     >
 
     <TextView
@@ -17,33 +18,40 @@
         android:text="SN DEVELOPERS"
         android:textStyle="bold"
         android:textSize="20pt"
+        android:textColor="@color/white"
         android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginTop="50dp"
         tools:ignore="HardcodedText" />
+
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="123@gmail.com"
         android:hint="Email"
+        android:textColor="@color/black"
         android:inputType="textEmailAddress"
         android:layout_marginBottom="16dp"
         tools:ignore="HardcodedText"/>
+
     <EditText
         android:id="@+id/Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="1234"
         android:hint="new Password"
+        android:textColor="@color/black"
         android:inputType="textPassword"
         android:layout_marginBottom="16dp"
         tools:ignore="HardcodedText"/>
+
     <EditText
         android:id="@+id/CONFIRMPASSWORD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="45678"
+        android:textColor="@color/black"
         android:hint="confirm password"
         android:inputType="textPassword"
         android:layout_marginBottom="16dp"
@@ -53,8 +61,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign Up"
+        android:backgroundTint="#007BFF"
+        android:textColor="@color/white"
         android:layout_gravity="center"
-        tools:ignore="HardcodedText"/>
+        />
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -65,14 +75,15 @@
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
             android:src="@mipmap/ic_launcher_facebook"
-            android:background="@color/design_default_color_on_primary"
+            android:background="@drawable/transparent_background"
             android:layout_marginEnd="16dp" />
 
     <ImageButton
         android:id="@+id/google_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/design_default_color_on_primary"
+        android:background="@drawable/transparent_background"
+        android:layout_marginTop="3dp"
         android:importantForAccessibility="no"
         android:src="@mipmap/ic_launcher_google"
 

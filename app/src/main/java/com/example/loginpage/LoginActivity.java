@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailEditText;
     EditText passwordEditText;
     Button loginBtn;
+    TextView signUpLink; // Declare sign-up link
     public FirebaseFirestore db;  // Firebase Firestore instance
 
     @Override
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.Password);
         loginBtn = findViewById(R.id.Login);
+        signUpLink = findViewById(R.id.sign_up_link); // Initialize sign-up link
 
         // Set the login button listener
         loginBtn.setOnClickListener(v -> {
@@ -49,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
                 // Authenticate the user
                 userAuth(mail, pass);
             }
+        });
+
+        // Set the sign-up link listener
+        signUpLink.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class); // Replace with your Sign Up Activity class
+            startActivity(intent);
         });
     }
 
@@ -78,7 +87,6 @@ public class LoginActivity extends AppCompatActivity {
                                     } else {
                                         // Incorrect password
                                         Toast.makeText(LoginActivity.this, "Incorrect password!", Toast.LENGTH_SHORT).show();
-
                                     }
                                 }
                             } else {

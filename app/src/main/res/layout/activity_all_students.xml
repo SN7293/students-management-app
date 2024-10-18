@@ -6,6 +6,7 @@
     android:orientation="vertical"
     tools:context=".AllStudent"
     android:layout_marginTop="100dp"
+    android:background="@drawable/background_gradient"
     android:padding="10dp">
 
     <LinearLayout
@@ -18,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Name"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -26,6 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/black"
             android:text="Reg No."/>
 
         <TextView
@@ -33,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/black"
             android:text="Father's Name"/>
     </LinearLayout>
 
@@ -40,6 +44,6 @@
         android:id="@+id/recycler_view_students"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-    android:layout_marginTop="16dp"
+        android:textColor="@color/black"
     android:layout_weight="1"/>
 </LinearLayout>
