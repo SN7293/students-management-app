@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     EditText passwordEditText;
     EditText confirmPasswordEditText;
     Button signupBtn;
+    TextView signinLink;
 
 
 
@@ -26,12 +29,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.Password);
         confirmPasswordEditText = findViewById(R.id.CONFIRMPASSWORD);
         signupBtn = findViewById(R.id.SignUp);
+        signinLink = findViewById(R.id.sign_in_link);
 
         db = FirebaseFirestore.getInstance();  // Initialize Firestore instance
+        signinLink.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,LoginActivity.class); // Replace with your Sign Up Activity class
+            startActivity(intent);
+        });
 
         signupBtn.setOnClickListener(v -> {
             String mail = emailEditText.getText().toString().trim();

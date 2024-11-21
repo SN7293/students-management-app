@@ -2,16 +2,17 @@ package com.example.loginpage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
@@ -22,12 +23,15 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordEditText;
     Button loginBtn;
     TextView signUpLink; // Declare sign-up link
-    public FirebaseFirestore db;  // Firebase Firestore instance
+    public FirebaseFirestore db;
+    // Firebase Firestore instance
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
@@ -101,6 +105,20 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Firebase Firestore is not initialized
             Toast.makeText(LoginActivity.this, "Firestore is not initialized", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            );
+
         }
     }
 }

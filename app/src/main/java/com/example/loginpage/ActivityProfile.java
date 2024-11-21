@@ -1,4 +1,5 @@
 package com.example.loginpage;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -31,7 +32,10 @@ public class ActivityProfile extends AppCompatActivity {
         textFatherName.setText(fatherName);
         textCnic.setText(fatherCnic);
         textRegNo.setText(regNumber);
+
         // Set profile image if needed
-        profileImage.setImageURI(Uri.parse(imageUri)); // If you have a URI
+        if (imageUri != null && !imageUri.isEmpty()) {
+            profileImage.setImageURI(Uri.parse(imageUri)); // If you have a URI
+        }
     }
 }
