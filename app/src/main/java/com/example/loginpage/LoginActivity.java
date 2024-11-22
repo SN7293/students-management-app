@@ -2,123 +2,54 @@ package com.example.loginpage;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Objects;
+import androidx.lifecycle.ViewModelProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // Declare UI components and Firestore instance
-    EditText emailEditText;
-    EditText passwordEditText;
-    Button loginBtn;
-    TextView signUpLink; // Declare sign-up link
-    public FirebaseFirestore db;
-    // Firebase Firestore instance
-
+    private EditText emailEditText, passwordEditText;
+    private Button loginBtn;
+    private TextView signUpLink;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        // Initialize Firebase Firestore
-        db = FirebaseFirestore.getInstance();
-
-        // Initialize UI components
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.Password);
         loginBtn = findViewById(R.id.Login);
-        signUpLink = findViewById(R.id.sign_up_link); // Initialize sign-up link
+        signUpLink = findViewById(R.id.sign_up_link);
 
-        // Set the login button listener
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         loginBtn.setOnClickListener(v -> {
-            String mail = emailEditText.getText().toString().trim();
-            String pass = passwordEditText.getText().toString().trim();
-
-            // Check if email or password fields are empty
-            if (mail.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Please enter your email", Toast.LENGTH_SHORT).show();
-            } else if (pass.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Please enter your password", Toast.LENGTH_SHORT).show();
-            } else {
-                // Authenticate the user
-                userAuth(mail, pass);
-            }
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
+            authViewModel.loginUser(email, password);
         });
 
-        // Set the sign-up link listener
-        signUpLink.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class); // Replace with your Sign Up Activity class
+        signUpLink.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, MainActivity.class)));
+
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        authViewModel.getSuccessMessage().observe(this, success -> {
+            Toast.makeText(this, success, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginActivity.this, ActivityStudent.class);
             startActivity(intent);
+            finish();
         });
-    }
 
-    // Method to authenticate user
-    public void userAuth(String mail, String pass) {
-        // Ensure the Firestore instance is initialized
-        if (db != null) {
-            // Query Firestore for the user's email
-            db.collection("User")
-                    .whereEqualTo("email", mail)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-
-                            if (!querySnapshot.isEmpty()) {
-                                // If user exists, check password
-                                for (QueryDocumentSnapshot document : querySnapshot) {
-                                    Modeluser user = document.toObject(Modeluser.class);
-
-                                    if (user.password.equals(pass)) {
-                                        // Password matches, login successful
-                                        Intent intent = new Intent(LoginActivity.this, ActivityStudent.class);
-                                        startActivity(intent);
-                                        finish();
-                                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        // Incorrect password
-                                        Toast.makeText(LoginActivity.this, "Incorrect password!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            } else {
-                                // No user found with that email
-                                Toast.makeText(LoginActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            // Error fetching data
-                            Toast.makeText(LoginActivity.this, "Error fetching data: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            // Firebase Firestore is not initialized
-            Toast.makeText(LoginActivity.this, "Firestore is not initialized", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_FULLSCREEN |
-                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            );
-
-        }
+        authViewModel.getErrorMessage().observe(this, error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        );
     }
 }

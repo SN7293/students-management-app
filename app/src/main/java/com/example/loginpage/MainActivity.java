@@ -8,27 +8,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-
+import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText emailEditText;
-    EditText passwordEditText;
-    EditText confirmPasswordEditText;
-    Button signupBtn;
-    TextView signinLink;
-
-
-
-    private FirebaseFirestore db;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
+    private Button signupBtn;
+    private TextView signinLink;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.Password);
@@ -36,47 +28,29 @@ public class MainActivity extends AppCompatActivity {
         signupBtn = findViewById(R.id.SignUp);
         signinLink = findViewById(R.id.sign_in_link);
 
-        db = FirebaseFirestore.getInstance();  // Initialize Firestore instance
-        signinLink.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this,LoginActivity.class); // Replace with your Sign Up Activity class
-            startActivity(intent);
-        });
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         signupBtn.setOnClickListener(v -> {
-            String mail = emailEditText.getText().toString().trim();
-            String pass = passwordEditText.getText().toString().trim();
-            String confirmPass = confirmPasswordEditText.getText().toString().trim();
-
-            if (validateInput(mail, pass, confirmPass)) {
-                // Create a new User object
-                Modeluser user = new Modeluser(mail, pass,confirmPass);
-
-                // Add the user to the Firestore database
-                db.collection("User")
-                        .add(user)
-                        .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(MainActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        })
-                        .addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
+            String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+            authViewModel.signupUser(email, password, confirmPassword);
         });
+
+        signinLink.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LoginActivity.class)));
+
+        observeViewModel();
     }
 
-    private boolean validateInput(String mail, String pass, String confirmPass) {
-        if (mail.isEmpty()) {
-            Toast.makeText(this, "Email is required", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (pass.isEmpty()) {
-            Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!pass.equals(confirmPass)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
+    private void observeViewModel() {
+        authViewModel.getSuccessMessage().observe(this, success -> {
+            Toast.makeText(this, success, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        });
+
+        authViewModel.getErrorMessage().observe(this, error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        );
     }
 }

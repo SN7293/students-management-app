@@ -32,6 +32,9 @@ android {
     }
 }
 
+
+
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -50,6 +53,11 @@ dependencies {
     implementation (libs.firebase.firestore.v2300)
     implementation (libs.material.v1100)
     implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
+
 
 
 }
